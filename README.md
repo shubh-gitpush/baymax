@@ -66,6 +66,11 @@
 
 <h4>1. Clone the Repository</h4>
 
-```bash
+```bash frontend
 git clone https://github.com/yourusername/baymax.git
 cd baymax
+python manage .py runserver
+''''
+''''bash frontend
+open another terminal and take the directory to frotend folder
+npm start
