@@ -50,8 +50,9 @@
 
 <table>
   <tr>
-    <td><img src="suggest.png" width="400"/></td>
-    <td><img src="UI.png" width="400"/></td>
+    <td><img src="suggest.png" width="800"/></td>
+    <br>
+    <td><img src="UI.png" width="800"/></td>
   </tr>
   <tr>
     <td align="center"><b>Doctor Suggestions</b></td>
