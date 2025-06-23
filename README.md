@@ -50,12 +50,12 @@
 
 <table>
   <tr>
-    <td><img src="https://your-screenshot-link.com/suggest-doctor.png" width="400"/></td>
-    <td><img src="https://your-screenshot-link.com/book-appointment.png" width="400"/></td>
+    <td><img src="Suggest.png" width="400"/></td>
+    <td><img src="UI.png" width="400"/></td>
   </tr>
   <tr>
     <td align="center"><b>Doctor Suggestions</b></td>
-    <td align="center"><b>Appointment Booking</b></td>
+    <td align="center"><b>Welcoming page</b></td>
   </tr>
 </table>
 
