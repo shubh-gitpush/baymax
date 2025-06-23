@@ -2,7 +2,7 @@
 <h3 align="center">Your Personal Health Companion</h3>
 
 <p align="center">
-  <img src="https://your-image-link.com/banner.png" width="80%" alt="Baymax Banner"/>
+  <img src="/logo.png" width="80%" alt="Baymax Banner"/>
 </p>
 
 ---
