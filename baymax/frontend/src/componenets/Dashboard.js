@@ -51,6 +51,8 @@ function Dashboard() {
           <Card title="Make Appointment" description="Schedule your appointment" url="/appointments" />
           <Card title="Doctor Suggestion" description="AI-based suggestions" url="/suggestion" />
           <Card title="My Appointments" description="View scheduled visits" url="/myappointments" />
+          <a href="https://baymax-voice-agent.vercel.app/" target="_blank" >
+          <Card title="AI-medical assistance" description="ask your queries" /></a>
            <Card title="Doctor list" description="View list of doctors" url="/Doctorlist" />
         </div>
       </div>
