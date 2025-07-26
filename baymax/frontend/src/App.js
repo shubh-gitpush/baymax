@@ -1,48 +1,38 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Outlet } from 'react-router-dom';
-import Login from './componenets/Login';
-import Register from './componenets/Register';
-import PatientRegister from './componenets/PatientRegister';
-import UserProfile from './componenets/UserProfile';
-import MyAppointments from './componenets/Myappointments';
-import Dashboard from './componenets/Dashboard';
-import Suggestion from './componenets/Suggestion';
-import AppointmentForm from './componenets/AppointmentForm';
-import Doctorlist from './componenets/Doctorlist';
-
-// Simple layout wrapper with navbar
-const Layout = () => (
-  <div className="min-h-screen bg-gray-100">
-    <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold text-blue-600">Baymax</h1>
-      <div className="space-x-4">
-        <Link to="/" className="text-gray-700 hover:text-blue-500">Dashboard</Link>
-        <Link to="/login" className="text-gray-700 hover:text-blue-500">Login</Link>
-        <Link to="/register" className="text-gray-700 hover:text-blue-500">Register</Link>
-      </div>
-    </nav>
-    <main className="p-6">
-      <Outlet />
-    </main>
-  </div>
-);
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./components/theme-provider";
+import { Header } from "./components/Header";
+import { Footer } from "./components/footer";
+import  RegisterPage  from "./components/Register";
+import  PatientRegisterPage  from "./components/PatientRegister";
+import  DoctorListPage  from "./components/Doctorlist";
+import  UserProfilePage  from "./components/UserProfile";
+import Suggestion  from "./components/Suggestion";
+import MyAppointmentsPage from "./components/Myappointments";
+import AppointmentFormPage  from "./components/AppointmentForm";
+// ...other imports
+import { HomePage } from "./components/Homepage"; // Import homepage sections
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          <Route path="patientregister" element={<PatientRegister />} />
-          <Route path="Doctorlist" element={<Doctorlist />} />
-          <Route path="userprofile" element={<UserProfile />} />
-          <Route path="suggestion" element={<Suggestion />} />
-          <Route path="appointments" element={<MyAppointments />} />
-          <Route path="myappointments" element={<AppointmentForm />} />
-        </Route>
-      </Routes>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/patient-register" element={<PatientRegisterPage />} />
+              <Route path="/doctor-list" element={<DoctorListPage />} />
+              <Route path="/user-profile" element={<UserProfilePage />} />
+              <Route path="/suggestion" element={<Suggestion />} />
+              <Route path="/my-appointments" element={<MyAppointmentsPage />} />
+              <Route path="/appointments" element={<AppointmentFormPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </ThemeProvider>
     </Router>
   );
 }
