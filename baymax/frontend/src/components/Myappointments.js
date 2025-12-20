@@ -18,6 +18,30 @@ const MyAppointments = () => {
       });
   }, []);
 
+  // ✅ Update appointment status (helper)
+  const updateStatus = (id, newStatus) => {
+    // If you want backend update, uncomment this and make sure your API supports PATCH
+    /*
+    API.patch(`appointments/${id}/`, { status: newStatus })
+      .then(() => {
+        setAppointments(prev =>
+          prev.map(app => app.id === id ? { ...app, status: newStatus } : app)
+        );
+      })
+      .catch(err => console.error("Failed to update", err));
+    */
+
+    // For now: just update locally
+    setAppointments(prev =>
+      prev.map(app => app.id === id ? { ...app, status: newStatus } : app)
+    );
+  };
+
+  // ✅ Handlers
+  const handleConfirm = (id) => updateStatus(id, 'confirmed');
+  const handleCancel = (id) => updateStatus(id, 'cancelled');
+  const handleReschedule = (id) => updateStatus(id, 'pending');
+
   // Loading spinner component
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center py-20">
@@ -183,9 +207,6 @@ const MyAppointments = () => {
                   <p className="text-blue-100 text-sm">Total</p>
                   <p className="text-2xl font-bold">{appointments.length}</p>
                 </div>
-                <svg className="w-8 h-8 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V6a2 2 0 012-2h4a2 2 0 012 2v1m-6 0h8m-8 0H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2h-2m-8 0V7"></path>
-                </svg>
               </div>
             </div>
             
@@ -197,9 +218,6 @@ const MyAppointments = () => {
                     {appointments.filter(app => app.status?.toLowerCase() === 'confirmed').length}
                   </p>
                 </div>
-                <svg className="w-8 h-8 text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
               </div>
             </div>
 
@@ -211,9 +229,6 @@ const MyAppointments = () => {
                     {appointments.filter(app => app.status?.toLowerCase() === 'pending').length}
                   </p>
                 </div>
-                <svg className="w-8 h-8 text-yellow-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
               </div>
             </div>
 
@@ -225,16 +240,13 @@ const MyAppointments = () => {
                     {appointments.filter(app => app.status?.toLowerCase() === 'completed').length}
                   </p>
                 </div>
-                <svg className="w-8 h-8 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
               </div>
             </div>
           </div>
 
           {/* Appointments List */}
           <div className="space-y-6">
-            {appointments.map((app, index) => {
+            {appointments.map((app) => {
               const statusStyle = getStatusStyle(app.status);
               return (
                 <div
@@ -298,61 +310,72 @@ const MyAppointments = () => {
                       <div className="flex items-start space-x-3 md:col-span-2 lg:col-span-1">
                         <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
                           <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Symptoms</p>
-                          <p className="text-gray-900 dark:text-gray-50 font-medium">
-                            {app.symptoms || 'No symptoms recorded'}
-                          </p>
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Symptoms</p>
+                            <p className="text-gray-900 dark:text-gray-50 font-medium">
+                              {app.symptoms || 'No symptoms recorded'}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="mt-6 flex flex-wrap gap-3">
-                      {app.status?.toLowerCase() === 'pending' && (
-                        <>
-                          <button className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
-                            Confirm
+  
+                      {/* Action Buttons */}
+                      <div className="mt-6 flex flex-wrap gap-3">
+                        {app.status?.toLowerCase() === 'pending' && (
+                          <>
+                            <button
+                              onClick={() => handleConfirm(app.id)}
+                              className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm"
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              onClick={() => handleCancel(app.id)}
+                              className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm"
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        )}
+                        {app.status?.toLowerCase() === 'confirmed' && (
+                          <button
+                            onClick={() => handleReschedule(app.id)}
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm"
+                          >
+                            Reschedule
                           </button>
-                          <button className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
-                            Cancel
-                          </button>
-                        </>
-                      )}
-                      {app.status?.toLowerCase() === 'confirmed' && (
-                        <button className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
-                          Reschedule
+                        )}
+                        <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
+                          View Details
                         </button>
-                      )}
-                      <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
-                        View Details
-                      </button>
-                      <button className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
-                        Contact Doctor
-                      </button>
+                        <button className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
+                          Contact Doctor
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Footer Actions */}
-          <div className="mt-12 text-center">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 mr-4">
-              Book New Appointment
-            </button>
-            <button className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-              Export Appointments
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
-
-export default MyAppointments;
+                );
+              })}
+            </div>
+  
+            {/* Footer Actions */}
+            <div className="mt-12 text-center">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 mr-4">
+                Book New Appointment
+              </button>
+              <button className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+                Export Appointments
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  };
+  
+  export default MyAppointments;
+  

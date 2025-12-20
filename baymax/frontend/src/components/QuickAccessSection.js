@@ -52,6 +52,12 @@ export function QuickAccessSection() {
       title: "User Profile",
       desc: "View and edit your profile.",
     },
+    {
+      to: "https://baymax-voice-agent.vercel.app/",
+      icon: <User className="h-8 w-8 text-blue-600 mb-2" />,
+      title: "chatbot",
+      desc: "Talk with your AI friend.",
+    },
   ];
 
   return (
