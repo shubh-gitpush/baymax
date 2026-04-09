@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import API from '../Api';
 
 function UserProfile() {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem('access');
-      const res = await fetch('http://127.0.0.1:8000/api/users/profile/', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
+      const res = await API.get('users/profile/');
+      const data = res.data;
       setProfile(data);
     };
 

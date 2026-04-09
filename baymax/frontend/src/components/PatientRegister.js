@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import initAHole from './Hole'; // make sure this path is correct
+import React, { useState } from 'react';
 import './Dashboard.css'; // reuse the styles with a-hole
+import API from '../Api';
 
 function PatientRegister() {
   const [formData, setFormData] = useState({
@@ -60,15 +60,19 @@ function PatientRegister() {
     
     setLoading(true);
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/users/register/patient/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, is_patient: true })
-      });
+      const payload = {
+        ...formData,
+        is_patient: true,
+        patient_profile: {
+          ...formData.patient_profile,
+          age: formData.patient_profile.age === '' ? '' : Number(formData.patient_profile.age),
+        },
+      };
+
+      const response = await API.post('users/register/patient/', payload);
+      const data = response.data;
       
-      const data = await response.json();
-      
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
         setSuccess(true);
         console.log('Registration successful:', data);
         // Reset form after successful registration
@@ -85,7 +89,24 @@ function PatientRegister() {
         setErrors({ submit: data.message || 'Registration failed. Please try again.' });
       }
     } catch (error) {
-      setErrors({ submit: 'Network error. Please check your connection and try again.' });
+      const responseData = error?.response?.data;
+      const backendMessage = responseData
+        ? Object.entries(responseData)
+            .map(([field, value]) => {
+              if (Array.isArray(value)) {
+                return `${field}: ${value.join(' ')}`;
+              }
+              if (typeof value === 'object' && value !== null) {
+                return `${field}: ${JSON.stringify(value)}`;
+              }
+              return `${field}: ${String(value)}`;
+            })
+            .join(' ')
+        : '';
+
+      setErrors({
+        submit: backendMessage || 'Network error. Please check your connection and try again.',
+      });
     } finally {
       setLoading(false);
     }

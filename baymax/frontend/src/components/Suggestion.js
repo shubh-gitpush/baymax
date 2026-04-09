@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Search, Stethoscope, Clock, Calendar, Mail, AlertCircle, Loader2, Star, MapPin, Phone } from "lucide-react"
+import API from "../Api"
 
 const SuggestDoctors = () => {
   const [symptoms, setSymptoms] = useState("")
@@ -21,14 +22,10 @@ const SuggestDoctors = () => {
     setHasSearched(true)
 
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/users/suggest-doctors/?symptoms=${encodeURIComponent(symptoms)}`,
-      )
-      if (!response.ok) {
-        const errText = await response.text()
-        throw new Error(errText)
-      }
-      const data = await response.json()
+      const response = await API.get('users/suggest-doctors/', {
+        params: { symptoms },
+      })
+      const data = response.data
       if (data.length === 0) {
         setError(
           "We couldn't find any doctors matching your symptoms right now. Try different keywords or contact our support team.",

@@ -31,7 +31,7 @@ const AppointmentForm = () => {
     const fetchDoctors = async () => {
       try {
         setDoctorsLoading(true)
-        const response = await API.get("http://127.0.0.1:8000/api/users/suggest-doctors")
+        const response = await API.get("users/doctors/")
         console.log("Doctors fetched:", response.data)
         setDoctors(response.data)
       } catch (error) {
@@ -43,6 +43,19 @@ const AppointmentForm = () => {
     }
 
     fetchDoctors()
+
+    const fetchProfile = async () => {
+      try {
+        const response = await API.get('users/profile/')
+        if (response.data?.username) {
+          setPatient(response.data.username)
+        }
+      } catch (profileError) {
+        console.debug('No authenticated user profile available for appointment form.', profileError)
+      }
+    }
+
+    fetchProfile()
   }, [])
 
   const handleSubmit = async (e) => {
@@ -53,7 +66,7 @@ const AppointmentForm = () => {
     const [date, time] = dateTime.split("T")
 
     try {
-      await API.post("http://127.0.0.1:8000/api/appointments/", {
+      await API.post("appointments/", {
         doctor: selectedDoctor,
         patient: patient,
         date: date,
@@ -197,7 +210,7 @@ const AppointmentForm = () => {
                 <div className="flex items-center mb-8">
                   <User className="w-8 h-8 text-blue-600 mr-4" />
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                    Tell us about yourself
+                    Confirm your patient username
                   </h2>
                 </div>
 
@@ -207,14 +220,14 @@ const AppointmentForm = () => {
                       htmlFor="patient"
                       className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3"
                     >
-                      Your Full Name *
+                      Patient Username *
                     </label>
                     <input
                       id="patient"
                       type="text"
                       value={patient}
                       onChange={(e) => setPatient(e.target.value)}
-                      placeholder="Enter your full name"
+                      placeholder="Enter your username"
                       className="w-full px-6 py-4 text-lg border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                       required
                     />
@@ -225,8 +238,8 @@ const AppointmentForm = () => {
                       Why we need this information
                     </h3>
                     <p className="text-blue-700 dark:text-blue-300 text-sm">
-                      Your name helps us create your appointment record and ensures our medical staff can properly
-                      identify and assist you during your visit.
+                      The backend links appointments to a patient account by username, so this value must match your
+                      registered account.
                     </p>
                   </div>
                 </div>

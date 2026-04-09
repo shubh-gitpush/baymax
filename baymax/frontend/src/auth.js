@@ -1,8 +1,7 @@
-// services/auth.js
-import axios from 'axios';
+import API from './Api';
 
 export const loginUser = async (username, password) => {
-  const response = await axios.post('http://127.0.0.1:8000/api/users/login/', {
+  const response = await API.post('users/login/', {
     username,
     password,
   });

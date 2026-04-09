@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API from '../Api';
 
 function DoctorRegister() {
   const [formData, setFormData] = useState({
@@ -27,12 +28,8 @@ function DoctorRegister() {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch('http://127.0.0.1:8000/api/users/register/doctor/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, is_doctor: true })
-    });
-    const data = await response.json();
+    const response = await API.post('users/register/doctor/', { ...formData, is_doctor: true });
+    const data = response.data;
     console.log(data);
   };
 

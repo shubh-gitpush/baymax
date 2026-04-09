@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import API from '../Api';
 
 const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
@@ -6,13 +7,8 @@ const DoctorList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/users/doctors/')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch doctors');
-        }
-        return response.json();
-      })
+    API.get('users/doctors/')
+      .then((response) => response.data)
       .then((data) => {
         setDoctors(data);
         setLoading(false);
